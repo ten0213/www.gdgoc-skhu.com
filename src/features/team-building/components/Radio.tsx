@@ -1,4 +1,4 @@
-import { forwardRef, InputHTMLAttributes } from 'react';
+import { ChangeEvent, forwardRef, InputHTMLAttributes } from 'react';
 
 import { radioButtonCss, radioLabelCss, radioWrapperCss } from '../styles/radio';
 
@@ -10,9 +10,21 @@ interface RadioProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' 
 
 const Radio = forwardRef<HTMLInputElement, RadioProps>(
   ({ label, disabled = false, onChange, className, ...rest }, ref) => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+      if (disabled) return;
+      onChange?.(event.target.checked);
+    };
+
     return (
       <label css={radioWrapperCss} className={`${disabled ? 'disabled' : ''} ${className || ''}`}>
-        <input ref={ref} type="checkbox" css={radioButtonCss} disabled={disabled} {...rest} />
+        <input
+          ref={ref}
+          type="radio"
+          css={radioButtonCss}
+          disabled={disabled}
+          onChange={handleChange}
+          {...rest}
+        />
         <span css={radioLabelCss}>{label}</span>
       </label>
     );
